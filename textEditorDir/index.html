@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+        function toServer(t) {
+            var records = document.getElementById('records');
+            var insertInfo = document.getElementById('insertInfo');
+            var sendMsg = "op=" + t.target.name;
+
+            if (t.target.type !== 'button')
+                return -1;
+
+
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.open('POST', 'gradeCalculator.php');
+            httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            if (t.target.name == 'insert') {
+                for (let i of insertInfo.children)
+                    sendMsg += "&" + i.name + '=' + i.value;
+            }
+            if (t.target.name == 'delete')
+                sendMsg += '&id=' + t.target.id;
+
+
+            httpRequest.send(sendMsg);
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.status == 200 && httpRequest.readyState == 4) {
+                    records.innerHTML = httpRequest.responseText;
+                }
+            }
+        }
+    </script>
+</head>
+
+<body onclick="toServer(event)" onload="toServer({target:{type:'button', name:'kuuki'}})">
+
+<h1>성적 처리 프로그램</h1>
+학생 성적 입력하기
+<table width='800' border="0" cellspacing="1" cellpadding="5" bgcolor=#cccccc>
+    <tr bgcolor="white">
+        <td id="insertInfo">
+            이름 : <input type="text" name="pname" size="8">
+            국어 : <input type="number" name="kor" min="0" max="100" width="20px">
+            영어 : <input type="number" name="eng" min="0" max="100" width="20px">
+            수학 : <input type="number" name="math" min="0" max="100" width="20px">
+            <input type="button" value="입력" name="insert">
+        </td>
+        <td>
+            <input type="button" value="성적순 정렬" name="descend">
+        </td>
+        <td>
+            <input type="button" value="성적역순 정렬" name="ascend">
+        </td>
+    </tr>
+</table>
+<p>
+
+</p>
+<table width='800' border="0" cellspacing="1" cellpadding="5" bgcolor=#cccccc>
+    <thead>
+    <tr bgcolor="#f0f8ff">
+        <th>번호</th>
+        <th>이름</th>
+        <th>국어</th>
+        <th>영어</th>
+        <th>수학</th>
+        <th>합계</th>
+        <th>평균</th>
+        <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+    </tr>
+    </thead>
+
+    <tbody id='records' bgcolor="white">
+
+    </tbody>
+</table>
+</body>
+
+</html>

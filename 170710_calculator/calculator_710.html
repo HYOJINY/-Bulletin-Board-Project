@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+
+    body {
+        margin: 0 auto;
+    }
+
+    #waku {
+        margin: 0 auto;
+        width: 200px;
+        border: solid grey 1px;
+    }
+
+    #buttons {
+        width: 200px;
+        background-color: #e9e9e9;
+    }
+
+    #equation {
+        width: 198px;
+        height: 50px;
+        text-align: left;
+    }
+    #now {
+        width: 198px;
+        height: 50px;
+        text-align: left;
+        border-top: solid grey 1px;
+    }
+
+    div {
+        display: inline-block;
+        float: left;
+    }
+
+    .button {
+        width: 48px;
+        height: 50px;
+        float: left;
+        border: solid white 1px;
+        text-align: center;
+        text-align: left;
+    }
+
+    .button:hover {
+        background-color: #cbcbcb;
+    }
+
+</style>
+
+<body>
+
+<form id="target" action="calculator_710.php" method="GET">
+
+    <div id="waku">
+
+
+        <input id="equation" type="text" name="send">
+        <input id="now" type="text">
+
+
+        <div id="buttons">
+
+            <div id="CE" class="button" onclick="deleteCE()">CE</div>
+            <div id="C" class="button" onclick="deleteAll()">C</div>
+            <div id=" / " class="button">/</div>
+            <div id="arrow" class="button" onclick="deleteLast()"> ←</div>
+
+            <div id="7" class="button">7</div>
+            <div id="8" class="button">8</div>
+            <div id="9" class="button">9</div>
+            <div id=" * " class="button">*</div>
+
+            <div id="4" class="button">4</div>
+            <div id="5" class="button">5</div>
+            <div id="6" class="button">6</div>
+            <div id=" - " class="button">-</div>
+
+            <div id="1" class="button">1</div>
+            <div id="2" class="button">2</div>
+            <div id="3" class="button">3</div>
+            <div id=" + " class="button">+</div>
+
+            <div id="±" class="button">±</div>
+            <div id="0" class="button">0</div>
+            <div id="." class="button">.</div>
+            <div id="=" class="button" onclick="submit()">=</div>
+        </div>
+    </div>
+</form>
+</body>
+<script>
+
+    var url = "calculator_710.php";
+
+
+    var equation_div = document.getElementById("equation");
+    var sendMsg = "";
+
+    var now_div = document.getElementById("now");
+    var nowMsg = "";
+
+    var buttonStr = document.getElementsByClassName("button");
+
+    for (let i = 0; i < buttonStr.length - 1; i++) {
+
+        let id = buttonStr[i].id;
+
+        if (!isNaN(parseInt(id)))
+            buttonStr[i].addEventListener("click", function () {
+                if (nowMsg == 0)
+                    nowMsg = "";
+                now_div.value = "";
+                nowMsg += this.id;
+                now_div.value = nowMsg;
+            });
+
+        else if (id != '=' && id != "C" && id != "CE" && id != "arrow" && id != "±")
+            buttonStr[i].addEventListener("click", function () {
+                sendMsg += nowMsg;
+                if (sendMsg.length == 0)
+                    sendMsg += '0';
+
+                var lastChar = sendMsg.charAt(sendMsg.length - 2);
+                if (lastChar == "*" || lastChar == "/" || lastChar == "+" || lastChar == "-")
+                    sendMsg = sendMsg.slice(0, sendMsg.length - 3);
+
+                sendMsg += this.id;
+                equation_div.value = sendMsg;
+
+                nowMsg = "";
+                now_div.value = "";
+
+            });
+
+    }
+
+
+    function deleteAll() {
+        sendMsg = "";
+        equation_div.value = sendMsg;
+
+        nowMsg = "";
+        now_div.value = nowMsg;
+    }
+
+
+    function deleteLast() {
+        nowMsg = nowMsg.slice(0, nowMsg.length - 1);
+        now_div.value = nowMsg;
+    }
+
+
+    function deleteCE() {
+        nowMsg = '0';
+        now_div.value = nowMsg;
+
+    }
+
+
+    function plusMinus() {
+
+    }
+
+    function submit() {
+        equation_div.value = sendMsg + nowMsg;
+        document.getElementById('target').submit();
+    }
+</script>
+</html>

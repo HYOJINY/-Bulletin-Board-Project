@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+
+    td {
+        width: 250px;
+    }
+
+    tr {
+        border-top: 1px black;
+    }
+
+</style>
+<body>
+<form id="target" action="printTheStars_712.php" method="GET" onsubmit="return checkcheck(this)">
+    <table border="1" rules="all" style="border-collapse:separate;">
+
+        <tr>
+            <td rowspan="2">
+                <input name="option" value="1" type="radio">1번 - 다중 열 알파벳
+            </td>
+            <td>
+                소문자<input name="cs" value="1" type="radio">
+                대문자<input name="cs" value="2" type="radio">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                열수 입력<input type="text" name="col">
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input name="option" value="2" type="radio">2번 - 직각 삼각형
+            </td>
+            <td rowspan="6"></td>
+        </tr>
+
+        <tr>
+            <td>
+                <input name="option" value="3" type="radio">3번 - 역직각 삼각형
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input name="option" value="4" type="radio">4번 - 이등변 삼각형
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input name="option" value="5" type="radio">5번 - 나비 넥타이
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input name="option" value="6" type="radio">6번 - 방패연
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <input type="submit">
+            </td>
+        </tr>
+
+    </table>
+</form>
+
+</body>
+<script>
+
+    function checkcheck(form) {
+
+        if (form.option.value == "") {
+            alert("번호를 체크하세요.");
+            return false;
+        }
+        if (form.option.value == "1") {
+
+            if (form.cs.value == "") {
+                alert("대소문자를 체크하세요.");
+                return false;
+            }
+            if (form.col.value == "" || isNaN(form.col.value)) {
+                alert("열수를 제대로 입력하세요.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+    /*check함수에서 form.이름으로 태그에 접근할 수 있는 이유 (form의 객체의 내용을 보고, 프로토타입 체이닝 관점으로)*/
+</script>
+</html>

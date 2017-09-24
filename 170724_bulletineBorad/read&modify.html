@@ -1,0 +1,153 @@
+<?php
+
+include 'connectDB.php';
+
+ //권한이 있다면
+ //if(isExitUser($owner_id=$_GET['owner_id'])){
+
+    $board_id = $_GET['board_id'];
+
+    if(isset($_GET['query'])){
+        $query = $_GET['query'];
+        //query=update;
+        if($query == 'submit'){
+            $subject = $_GET['subject'];
+            $content = $_GET['content'];
+            update($subject, $content, $board_id);
+
+        }else if($query == 'delete'){
+            delete($board_id);
+        }
+
+        //query=delete;
+
+
+    }
+
+        //게시글 id로 콘텐츠 가져오기
+        $record=  getContent($board_id);
+ //};
+
+?>
+
+
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Title</title>
+</head>
+<style>
+    body {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    table {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 30px;
+    }
+
+    h4 {
+        margin: 0 auto;
+    }
+</style>
+<script>
+
+    function unlock(t) {
+
+        //수정버튼 눌렀을 때
+        if (t.value == 'update') {
+            alert('수정합니다.');
+            document.getElementById('mode').innerHTML = '글 수정';
+
+           setTimeout(function () {t.type = 'submit'}, 100);
+            t.value = 'submit';
+            t.removeAttribute('onclick');
+
+            document.getElementById('button2').value = 'cancel';
+            document.getElementById('button2').type = 'button';
+            document.getElementById('button2').setAttribute('onclick', '(function(){location.reload();})()');
+
+
+            document.getElementById('form').setAttribute('action', 'read&modify.html');
+            document.getElementById('form').removeAttribute('onsubmit');
+            window.onsubmit = function () {
+                if (document.getElementsByName('subject')[0].value == '') {
+                    alert('제목을 입력하세요.');
+                    return false;
+                } else {
+                    alert('수정되었습니다.');
+                    return true;
+                }
+            };
+
+            document.getElementsByName('subject')[0].disabled = false;
+            document.getElementsByName('content')[0].disabled = false;
+        }
+    }
+
+
+</script>
+<body>
+
+<h1 id='mode'>글 보기</h1>
+
+<h4>num : <?echo $record[3]?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    hits : <?echo $record[4]?></h4>
+<form action='write.php' method='get' id='form' onsubmit='return (function() {
+    return confirm("삭제 하시겠습니까?");
+})()'>
+
+
+    <table border='1'>
+        <tr>
+            <td width='30'>
+                Title
+            </td>
+            <td width='90'>
+                <?echo "<input type='text' name='subject' value='$record[0]' disabled>"?>
+            </td>
+            </td>
+        </tr>
+        <td width='30'>
+            Writer
+        </td>
+        <td width='90'>
+            <?echo $record[1]?>
+        </td>
+        <tr>
+            <td colspan='2'>Content<br>
+                <?echo "<textarea cols='30' rows='10' name='content' disabled>$record[2]</textarea>"?>
+            </td>
+        <tr>
+            <td colspan='2'>
+                <input type='button' name='query' id='button1' value='update' onclick='unlock(this)'>
+                <input type='submit' name='query' id='button2' value='delete'>
+
+                <input type='hidden' name='user_id' value='dahee'>
+                <input type='hidden' name='user_name' value='곽다희'>
+                <?echo "<input type='hidden' name='board_id' value='$record[3]'>" ?>
+
+            </td>
+        </tr>
+    </table>
+</form>
+<p>
+
+    <a href='index.html' style='margin: 0;'>To the list</a>
+
+</p>
+</body>
+</html>";
+
+
+/*
+함수 unlock 28번 라인 추가부분
+if ($owner_id != $SESSION['user_Id']) {
+alert('수정 불가한 게시글 입니다.');
+return;
+}*/

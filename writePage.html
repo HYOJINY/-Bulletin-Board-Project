@@ -1,0 +1,87 @@
+<?php
+ include 'control.php';
+?>
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<style>
+    body {
+        margin: auto 0;
+    }
+
+    div {
+        margin: 2%;
+        border: 0.5px black solid;
+        padding: 1%;
+    }
+</style>
+<script>
+
+    function printTime() {
+        var clock = document.getElementById("clock");            // 출력할 장소
+        var now = new Date();                                                  // 현재시간
+        var nowTime = now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate() + "  " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        clock.innerHTML = nowTime;           // 현재시간을 출력
+        setTimeout("printTime()", 1000);         // setTimeout(“실행할함수”,시간) 시간은1초의 경우 1000
+    }
+
+    // 페이지가 로딩되면 실행
+    window.onload = function() {
+        printTime();
+    }
+
+</script>
+
+<body>
+<div>
+    <h1>글쓰기</h1>
+</div>
+
+<form method="get" action="control.php">
+    <div id="login">
+        <?php  mk_login_template();  ?>
+    </div>
+    <div>
+        <div>
+            <table border="1">
+                <tr>
+                    <td>
+                        Date
+                    </td>
+                    <td>
+                        <span id="clock"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Title
+                    </td>
+                    <td>
+                        <input type="text" name="title" required>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <textarea cols="30" rows="10" name="content" required></textarea>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div>
+            <input type="submit" value="저장">
+            <input type="hidden" name="mode" value="insert">
+            <input type="hidden" name="user_id" value=<? echo $user_id ?>>
+            <button id="cancel" onclick="{location.href = '/';}">목록으로</button>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

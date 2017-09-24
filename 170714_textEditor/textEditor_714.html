@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function toServer(t) {
+
+            //준비
+            //JavaScript를 이용하여 서버로 보내는 HTTP request를 만드는 클래스 인스턴스
+            var HEMIrequest = new XMLHttpRequest();
+            var sending_date = "txt=" + document.querySelector('#txt').value + "&op=" + t.id;
+
+
+            if (t.id === "1") {
+                var fromUser = prompt("찾을 값을 입력하세요.");
+                sending_date += "&search=" + fromUser;
+                if (fromUser !== null)
+                    fromUser = prompt("바꿀 값을 입력하세요.");
+
+                sending_date += "&replace=" + fromUser;
+
+            }
+
+            if (t.id === "4") {
+                var fileName = prompt("파일 이름을 지정하세요.");
+                sending_date += "&fileName=" + fileName;
+            }
+
+
+            //요구를 보내고 응답을 처리하기 위한 함수
+            HEMIrequest.onreadystatechange = function () {
+                // process the server response
+                //서버 응답 확인 && http 서버 응답 확인
+                if (HEMIrequest.readyState == 4 && HEMIrequest.status == 200) {
+                    // 이상 없음!
+                    if (t.id === "4" && fileName !== null)
+                        document.querySelector('#links').innerHTML += `<a href="${fileName}.txt" download="" >${fileName}.txt</a><br>`;
+                    //E:\\AutoSet9\\public_html\\textEditorDir\\
+                    document.querySelector('#txt').value = HEMIrequest.responseText;
+                }
+            };
+
+            //보내기
+            HEMIrequest.open('POST', './textEditor_714.php', true);
+            HEMIrequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            HEMIrequest.send(sending_date);
+        }
+
+
+        function fileOpen() {
+
+            var HEMIrequest = new XMLHttpRequest();
+            //요구를 보내고 응답을 처리하기 위한 함수
+            HEMIrequest.onreadystatechange = function () {
+                // process the server response
+                //서버 응답 확인 && http 서버 응답 확인
+                if (HEMIrequest.readyState == 4 && HEMIrequest.status == 200) {
+                    // 이상 없음!
+                    document.querySelector('#links').innerHTML = HEMIrequest.responseText;
+                }
+            };
+
+            //보내기
+            HEMIrequest.open('get', './textEditor_714_fileOpen.php', true);
+            HEMIrequest.send();
+
+        }
+        /*
+         var url = 'textEditor_714.php';
+         var txt = document.querySelector('#txt').id+"=";
+
+
+         var httpRequest;
+         document.getElementById("op1").addEventListener('click', function () {
+
+         httpRequest = new XMLHttpRequest();
+         httpRequest.onreadystatechange = function () {
+         if (httpRequest.readyState === 4) {
+         if (httpRequest.status === 200) {
+         document.querySelector('#txt').value = httpRequest.responseText;
+         } else {
+         alert('There was a problem with the request.');
+         }
+         }
+         };
+         httpRequest.open('POST', url);
+         httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+         txt += document.querySelector('#txt').value;
+         httpRequest.send(txt);
+         });
+
+         */
+    </script>
+</head>
+<body  onload="fileOpen()">
+<table border="1">
+    <tr>
+        <td rowspan="4">
+            <textarea id="txt" rows="20" cols="30" textalign="left"></textarea>
+        </td>
+        <td><input id="1" type="button" value="찾아바꾸기" onclick="toServer(this)"></td>
+    </tr>
+    <tr>
+        <td><input id="2" type="button" value="소문자 -> 대문자" onclick="toServer(this)"></td>
+    </tr>
+    <tr>
+        <td><input id="3" type="button" value="대문자 -> 소문자" onclick="toServer(this)"></td>
+    </tr>
+    <tr>
+        <td><input id="4" type="button" value="파일로 저장" onclick="toServer(this)"></td>
+    </tr>
+</table>
+<p id="links">
+
+</p>
+</body>
+</html>

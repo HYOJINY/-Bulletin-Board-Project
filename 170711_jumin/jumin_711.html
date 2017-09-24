@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>
+    주민번호를 입력하세요.
+</h3>
+<form method="get" id="target" action="jumin_711.php">
+    <input type="text" id="input" value="" name="jumin"/>
+    <input type="button" onclick="check()" value="제출">
+</form>
+</body>
+<script>
+    var input_tag = document.getElementById("input");
+
+    function check() {
+
+        /*
+         * 유효성 검사
+         * 1. 하이픈이 여러개 들어간 경우
+         * 2. 자릿수가 맞지 않는 경우 (1마디 - 6자리 /2마디 - 7자리
+         * 3. 1마디가 첫째자리가 2가 아니면 --> 2마디 첫째자리가 1또는 2
+         *    1마디가 첫째자리가  2이면    --> 2마디 첫째자리가 3또는 4
+         *
+         * */
+/*
+        var splitJumin = input_tag.value.split('-');
+
+        if (splitJumin.length != 2) {
+            alert("유효하지 않은 주민번호");
+            return;
+        }
+
+        if (splitJumin[0].length != 6 || splitJumin[1].length != 7) {
+            alert("유효하지 않은 주민번호");
+            return;
+        }
+
+
+        if (splitJumin[0].charAt(0) == 2) {
+            if (splitJumin[1].charAt(0) != 3 && splitJumin[1].charAt(0) != 4) {
+                alert("유효하지 않은 주민번호");
+                return;
+            }
+        } else {
+            if (splitJumin[1].charAt(0) != 1 && splitJumin[1].charAt(0) != 2) {
+                alert("유효하지 않은 주민번호");
+                return;
+            }
+        }
+*/
+        document.getElementById('target').submit();
+
+    }
+    /*과제 - 주민번호 13자리를 입력하면 자동적으로 하이픈이 생기게 하기*/
+</script>
+</html>

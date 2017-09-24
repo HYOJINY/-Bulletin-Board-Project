@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+
+    td {
+        text-align: center;
+    }
+
+</style>
+<script>
+
+    function check(form) {
+
+        //가로, 세로, 시작숫자, 끝숫자 중 하나라도 이상한 값이라면 거르기.
+        if (isNaN(form.col.value) || isNaN(form.row.value) || isNaN(form.stNum.value) || isNaN(form.edNum.value)) {
+            alert("올바른 숫자를 입력하세요");
+            return false;
+        }
+        //가로, 세로, 시작숫자 1부터
+        if (form.col.value < 1 || form.row.value < 1 || form.stNum.value < 1) {
+            alert("1이상의 숫자를 넣어주세요.");
+            return false;
+        }
+
+
+        //끝숫자-시작숫자 + 1 >= 가로*세로 여야함
+        if (form.edNum.value - form.stNum.value + 1 < form.row.value * form.col.value) {
+            alert("수의 범위를 확인하세요.");
+            return false;
+        }
+
+
+        return true;
+    }
+
+</script>
+<body>
+
+<form id="target" method="GET" action="printRandNum_713.php" onsubmit="return check(this)">
+    <table>
+        <tr>
+            <td>가로 <br><input name="col" type="text"></td>
+            <td><br>X</td>
+            <td>세로 <br><input name="row" type="text"></td>
+        </tr>
+        <tr>
+            <td>범위 <br><input name="stNum" type="text"></td>
+            <td><br>~</td>
+            <td><br><input name="edNum" type="text"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input name="markTriple" type="checkbox" value="true">3의 배수</td>
+            <td><input type="submit"></td>
+        </tr>
+    </table>
+</form>
+
+</body>
+
+</html>

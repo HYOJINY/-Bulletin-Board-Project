@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body onload=" (function(){
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('get', 'index.php?');
+    httpRequest.onreadystatechange = function() {
+      if(httpRequest.status == 200 && httpRequest.readyState == 4)
+          document.getElementById('countNum').innerHTML = httpRequest.responseText;
+    };
+    httpRequest.send();
+})()">
+
+<h1>방문자수 카운트</h1>
+<h3 id="countNum"></h3>
+</body>
+</html>

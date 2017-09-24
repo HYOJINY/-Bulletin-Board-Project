@@ -1,0 +1,198 @@
+<?
+    include 'control.php';
+
+    $board_id  = $_GET['board_id'];
+    $currPage  = $_GET['currPage'];
+
+//해당 컨텐츠 가져오기
+    $record    = getBoard($board_id);
+    $title     = str_replace(' ','&nbsp;',$record[1]);
+    $content   = str_replace(' ','&nbsp;',$record[5]);
+    $writer_id = str_replace(' ','&nbsp;',$record[2]);
+    $hit = $record[3];
+?>
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body {
+        margin: auto 0;
+    }
+
+    div {
+        margin: 2%;
+        border: 0.5px black solid;
+        padding: 1%;
+    }
+</style>
+<script>
+
+    function toIndex() {
+        location.href = '/?currPage=' + document.getElementsByName('currPage')[0].value;
+    }
+
+    //권한 체크
+    var user_id = "<? echo $user_id; ?>";
+    var writer_id = "<? echo $writer_id; ?>";
+
+
+    //댓글 수정
+    function toCommentUpdate(t,comment_id) {
+       document.getElementById("textarea" + comment_id).readOnly = false;
+        commentButtons = t.parentElement;
+        commentButtons.innerHTML = "";
+        commentButtons.innerHTML = "<input type='submit' value='확인'><input type='button' value='취소' onclick='{ location.reload(); }'><input type='hidden' name='mode' value='commentUpdate'><input type='hidden' name='comment_id' value="+ comment_id + "><input type='hidden' name='comment_writer_id' value=$comment_writer_id>";
+    }
+
+
+
+    function toCommentComment(o){
+        if(comment_writer_id == user_id) {
+            alert(comment_writer_id);
+
+        } else
+            alert('권한이 없습니다.');
+    }
+
+
+    function printTime() {
+        var clock = document.getElementById("clock");            // 출력할 장소
+        var now = new Date();                                                  // 현재시간
+        var nowTime = now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate() + "  " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        clock.innerHTML = nowTime;           // 현재시간을 출력
+        setTimeout("printTime()", 1000);         // setTimeout(“실행할함수”,시간) 시간은1초의 경우 1000
+    }
+
+    // 페이지가 로딩되면 실행
+    window.onload = function() {
+        printTime();
+    }
+
+
+</script>
+<body>
+<div>
+    <h1>게시판</h1>
+</div>
+
+<!--로그인 부분-->
+<div id="login">
+    <form method="get" action="control.php"><? mk_login_template(); ?></form>
+</div>
+
+<form method="get" action="control.php" onsubmit="return toDelete();">
+    <div id="content">
+        <table border="1">
+            <tr>
+                <td>
+                    Date
+                </td>
+                <td>
+                    <span id="clock"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    제목
+                </td>
+                <td>
+                    <input type="text" name="title" required readonly value=<? echo $title; ?>>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    작성자
+                </td>
+                <td>
+                    <? echo $record[2]?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">글번호 : <?echo $board_id?></td>
+                <input type="hidden" name="board_id" value=<?echo $board_id?>>
+            </tr>
+            <tr>
+                <td colspan="2">조회수 : <?echo $hit?></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea cols="30" rows="10" name="content" required readonly><? echo $content?></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="buttons">
+
+
+
+<? 
+if($user_id == $writer_id){
+    echo
+       "<input type='button' value='수정' onclick='toUpdate()'>
+        <input type='submit' value='삭제'>
+        <input type='hidden' name='mode' value='delete'>
+
+        <input type='hidden' name='user_id' value=$user_id;>
+        <input type='hidden' name='writer_id' value='$writer_id'>";
+}
+    echo
+        "<input type='hidden' name='currPage' value=$currPage>
+        <input type='button' onclick='toIndex()' value='목록으로'>
+    </div>
+</form>";
+
+if($user_id != 'anonymous'){
+    echo
+        "<form method='get' action='control.php'>
+            <div id='comment'>
+                <textarea name='comment' required></textarea>
+                <input type='hidden' name='board_id' value=$board_id>
+                <input type='hidden' name='comment_pid' value='0'>
+                <input type='hidden' name='mode' value='comment'>
+                <input type='hidden' name='user_id' value=$user_id>
+                <input type='submit' value='등록'>
+            </div>
+        </form>";
+}
+?>
+
+
+
+    <?php
+    //user_id, comment, date, comment_id, comment_pid
+    $records = getComments($board_id);
+    $num = count($records);
+
+    for($i = 0; $i < count($records); $i++)
+    {
+        $comment_writer_id = $records[$i][0];
+        $comment = $records[$i][1];
+        $date    = $records[$i][2];
+        $comment_id = $records[$i][3];
+        $comment_pid = $records[$i][4];
+
+        print "<form method = 'get' action = './control.php';'><div>". (count($records) - $i)  ."  $comment_writer_id  $date <br><textarea id='textarea$comment_id' name='comment' readonly required>$comment</textarea><br>";
+
+        if($user_id != 'anonymous'){
+            echo "<div id=$comment_id>";
+            if($comment_writer_id == $user_id){
+                echo "<input type='button' value='수정' onclick='toCommentUpdate(this, $comment_id)'>";
+                echo "<input type='submit' value='삭제'>";
+                echo "<input type='hidden' name='mode' value='commentDelete'>";
+                echo "<input type='hidden' name='comment_id' value='$comment_id'>";
+            }
+            echo "<input type='button' value='댓글' onclick='toCommentComment(this);'>";
+            echo "</div>";
+        }
+        echo "</div></form>";
+    }
+    ?>
+
+</form>
+
+</body>
+</html>

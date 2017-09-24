@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Title</title>
+</head>
+<body>
+<input type='text' id='op1'> +
+<input type='text' id='op2'> =
+<input type='text' id='value'>
+<input type='submit' value="제출" onclick="Ajax()">
+
+<p id="loading"></p>
+</body>
+
+<script>
+
+    //Ajax 함수선언
+    function Ajax() {
+
+        //XMLHTTP 객체 생성
+        var httpRequest = new XMLHttpRequest();
+
+        //피연산자의 ID값으로 element 객체주소값 받아옴
+        var op1 = document.getElementById("op1");
+        var op2 = document.getElementById("op2");
+
+        //요청하는 URL
+        var url = "calculatorAjax.php?" + "op1="+op1.value + "&op2=" + op2.value;
+
+        //loding 출력
+        var loading = document.getElementById("loading");
+        loading.innerHTML = "Loading";
+        var countDot = 0;
+        //setInterval함수로 주기적으로 loading.. 출력
+        var intervalId = setInterval(function () {
+            if (countDot < 5) {
+                loading.innerHTML += ".";
+                countDot++;
+            } else {
+                loading.innerHTML = "Loading";
+                countDot = 0;
+            }
+        }, 300);
+
+        //httpRequest.onreadystatechange에 함수 정의 -> httpRequest.send() 후 실행되는 구문
+        httpRequest.onreadystatechange = function () {
+
+            //readyState 4 =>  데이터 전부 받은 상태/ 200 => 요청 성공
+
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                //loading 종료
+                clearInterval(intervalId);
+                loading.innerHTML = "";
+                //연결 성공 시 결과창에 php파일로 부터 받은 결과 값 출력
+                document.getElementById("value").value = httpRequest.responseText;
+            }
+        };
+
+        //연결 설정
+        httpRequest.open("GET",url, true);
+
+        //GET방식으로 Request를 보냄
+        httpRequest.send();
+
+    }
+</script>
+</html>

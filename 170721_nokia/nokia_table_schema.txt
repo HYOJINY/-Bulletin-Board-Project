@@ -1,0 +1,12 @@
+DROP DATABASE IF EXISTS ycj_test;
+create database ycj_test;
+use ycj_test;
+DROP TABLE IF EXISTS nokia;
+
+create table nokia (
+enbid   int(10) not null,
+lncel int(10) not null,
+cellid int(10) not null,
+frequency int(10) not null,
+pci	int(10) not null
+);

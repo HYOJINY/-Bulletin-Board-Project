@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+
+    body {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    table {
+        margin: 0 auto;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 30px;
+    }
+</style>
+<script>
+
+    var thisMode = {
+        mode: "list",
+        keyword: "",
+        search: "",
+
+        getMode: function () {
+            return this.mode;
+        },
+
+        setMode: function (str) {
+            this.mode = str;
+            return true;
+        },
+
+        getKeyword: function () {
+            return this.keyword;
+        },
+
+        setKeyword: function (str) {
+            this.keyword = str;
+            return true;
+        },
+
+        getSearch: function () {
+            return this.search;
+        },
+
+        setSearch: function (str) {
+            this.search = str;
+            return true;
+        }
+
+    };
+
+    function toServer(t, s) {
+
+        var sendingData = "";
+        if (t == 'mode') {
+            if (s == 'search' || thisMode.getMode() == 'search') {
+                thisMode.setMode('search');
+                thisMode.setSearch(document.getElementById('search').value);
+                thisMode.setKeyword(document.getElementById('keyword').value);
+
+                if (document.getElementById('keyword').value == '') {
+                    alert('찾으시는 내용이 없습니다.');
+                    return;
+                }
+
+
+            }
+        }else if(t == 'listUp'){
+            sendingData += s + "&";
+        }
+
+        sendingData += "mode="+thisMode.getMode()+ "&";
+        sendingData += "search=" + thisMode.getSearch() + "&";
+        sendingData += "keyword=" + thisMode.getKeyword();
+
+        var httpRequest = new XMLHttpRequest();
+
+
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.status == 200 && httpRequest.readyState == 4)
+                document.getElementById('list').innerHTML = httpRequest.responseText;
+        };
+
+        httpRequest.open('get', 'list.php?' + sendingData);
+        httpRequest.send();
+    }
+
+
+</script>
+
+<body onload="toServer('mode','list')">
+
+<center><h1>게시판</h1></center>
+
+
+<form id="searchBar">
+    <select id="search">
+        <option value="subject">Title</option>
+        <option value="content">Content</option>
+        <option value="user_name"> Writer</option>
+    </select>
+    <input type="text" id="keyword" placeholder="Search">
+    <input type="button" value="search" onclick="toServer('mode','search')">
+</form>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th width="40">Num</th>
+        <th width="200">Title</th>
+        <th width="50">Writer</th>
+        <th width="150">Date</th>
+        <th width="50">Hits</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+
+
+    </tbody>
+</table>
+
+<p><input type="button" value="Write" onclick="(function () {
+  location.replace('writeTemplate.html');
+})()"></p>
+
+</body>
+</html>

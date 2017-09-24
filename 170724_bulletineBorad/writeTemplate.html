@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    body{
+        margin: 0 auto;
+        text-align: center;
+    }
+    table {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    h1 {
+        margin-top: 30px;
+    }
+
+    h4 {
+        margin: 0 auto;
+    }
+</style>
+<body>
+
+<form action="write.php" method="get" onsubmit="return (function () {
+  if(document.getElementById('subject').value == ''){
+      alert('제목을 입력하세요.');
+      return false;
+  }
+})()">
+
+    <center>
+        <h1 id='mode'>글 쓰기</h1>
+    </center>
+
+    <?php
+
+    $date = date('Y-m-d');
+    echo "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Date : $date</h4>";
+
+    ?>
+    <table border="1">
+        <tr>
+            <td width="30">
+                Title
+            </td>
+            <td width="90">
+                <input type="text" id="subject" name="subject">
+            </td>
+            </td>
+        </tr>
+        <td width="30">
+            writer
+        </td>
+        <td width="90">
+            <?php
+                echo 'user_name';
+            ?>
+        </td>
+        <tr>
+            <td colspan="2">content<br>
+                <textarea cols="30" rows="10" name="content"></textarea>
+            </td>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="submit">
+                <input type="hidden" name="user_id" value="jiny">
+                <input type="hidden" name="user_name" value="이효진">
+                <input type="hidden" name="query" value="insert">
+                <input type="button" value="cancel" onclick="(function () {
+        location.replace('index.html');
+        })()">
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+</body>
+</html>

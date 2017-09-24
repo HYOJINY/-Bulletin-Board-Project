@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function toServer(t) {
+            var sendMSG = '';
+            if(t != 'body') {
+                //sending 구문 만들기
+                sendMSG = "op=" + t.name;
+                var inputdataArr = document.getElementById('inputdata').children;
+
+                for (let i of inputdataArr)
+                    sendMSG += "&" + i.name + "=" + i.value;
+
+                if (t.name == 'del')
+                    sendMSG += "&delId=" + t.id;
+            }
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.status == 200 && httpRequest.readyState == 4)
+                    document.getElementById('records').innerHTML = httpRequest.responseText;
+            };
+
+            httpRequest.open('POST', 'control2.php');
+            httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            httpRequest.send(sendMSG);
+
+        }
+    </script>
+</head>
+<body onload="toServer('body')">
+<table cellspacing="1" cellpadding="5" bgcolor=#cccccc>
+    <thead bgcolor="white">
+    <tr>
+        <td id="inputdata">
+            이름 : <input type="text" name="pname" size="5">
+            국어 : <input type="number" name="kor" min="0" max="100" width="20px">
+            영어 : <input type="number" name="eng" min="0" max="100" width="20px">
+            수학 : <input type="number" name="math" min="0" max="100" width="20px">
+        </td>
+        <td>
+            <input type="button" name='ins' onclick="toServer(this)" value="입력">
+        </td>
+        <td>
+            <input type="button" name='des' onclick="toServer(this)" value="성적순 정렬">
+        </td>
+        <td>
+            <input type="button" name='asc' onclick="toServer(this)" value="성적역순 정렬">
+        </td>
+    </tr>
+    </thead>
+</table>
+
+<table id="recordTable" cellspacing="1" cellpadding="5" bgcolor="#7fffd4">
+    <thead bgcolor="white">
+    <tr>
+        <td>번호</td>
+        <td>이름</td>
+        <td>국어</td>
+        <td>영어</td>
+        <td>수학</td>
+        <td>합계</td>
+        <td>평균</td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+    </thead>
+    <tbody id="records">
+    </tbody>
+</table>
+</body>
+</html>
